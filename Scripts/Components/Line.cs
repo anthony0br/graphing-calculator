@@ -59,7 +59,11 @@ public class Line : MonoBehaviour
     // Creates a new formula tree and re-renders
     public void SetFormula(string text, bool isInverse)
     {
-        formulaTree = new FormulaTree(text);
+        bool success;
+        formulaTree = new FormulaTree(text, out success);
+        print(success);
+
+        // Set inverse 
         inverse = isInverse;
 
         // Create fresh vertices list (deleting all existing vertices)

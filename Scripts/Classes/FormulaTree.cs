@@ -68,10 +68,9 @@ public class FormulaTree
     private Node? rootNode;
 
     // Constructor
-    public FormulaTree(string textFormula)
+    public FormulaTree(string textFormula, out bool success)
     {
-        // TO DO: Input validation
-
+        success = true;
         // Input sanitisation
         for (int i = 0; i < textFormula.Length; i++)
         {
@@ -217,6 +216,33 @@ public class FormulaTree
             }
         }
         divideNode(rootNode);
+
+        // Not nullable as node == null is a stopping condition
+        Queue<Node> queue = new Queue<Node>();
+        queue.Enqueue(rootNode);
+        while (!queue.TryPeek(out _)) {
+            Node node = queue.Dequeue();
+            bool isLeaf = false;
+            if (node.Left != null) {
+                isLeaf = false;
+                queue.Enqueue(node.Left);
+            }
+            // If there is a right
+            if (node.Right != null) {
+                isLeaf = false;
+                queue.Enqueue(node.Right);
+            }
+            // Ensure leaf nodes are operands
+            if (isLeaf) {
+                // Return false if it is not a valid operand
+                if (!int.TryParse(node.Data, out _) && !(node.Data == "x" || node.Data == "-x")) {
+                    success = false;
+                }
+            } // Ensure parent nodes are operators
+            else if (node.Data == null || node.Data.Length != 1 || !GetOperator(node.Data, 0, out _)) {
+                success = false;
+            }
+        }
     }
 
     // Checks whether a part of the string is an operator and returns the function if it is
