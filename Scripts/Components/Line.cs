@@ -56,12 +56,17 @@ public class Line : MonoBehaviour
         colour = newColour;
     }
 
-    // Creates a new formula tree and re-renders
-    public void SetFormula(string text, bool isInverse)
+    // Creates a new formula tree and re-renders, returns whether successfully generated a valid tree
+    // Uses a blank tree if input text fails to generate a valid tree
+    public bool SetFormula(string text, bool isInverse)
     {
         bool success;
         formulaTree = new FormulaTree(text, out success);
-        print(success);
+        
+        // If not successful, use a new blank tree
+        if (!success) {
+            formulaTree = new FormulaTree("", out _);
+        }
 
         // Set inverse 
         inverse = isInverse;
@@ -71,6 +76,8 @@ public class Line : MonoBehaviour
 
         // Call FitVerticesToViewport
         FitVerticesToViewport();
+
+        return success;
     }
 
     // Overloaded function to allow omission of inverse parameter

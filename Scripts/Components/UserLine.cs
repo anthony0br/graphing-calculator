@@ -50,9 +50,7 @@ public class UserLine : MonoBehaviour
         main.TotalLineCount += 1;
 
         // On text updated (call set formula)
-        TextInputField.onSubmit.AddListener(line.SetFormula);
-
-        // TO DO: Open customisation menu on select
+        TextInputField.onSubmit.AddListener(onTextUpdate);
         
         // Listen to delete button input
         {
@@ -62,10 +60,13 @@ public class UserLine : MonoBehaviour
             });
         }
 
-        // TO DO: Listen to customisation buttons
-
         // Add to Lines list
         main.Lines.Add(this);
+    }
+
+    private void onTextUpdate(string newText) {
+        // LineUI.
+        //https://docs.unity3d.com/ScriptReference/Material.SetColor.html
     }
 
     public void SetColour(Color newColour) {

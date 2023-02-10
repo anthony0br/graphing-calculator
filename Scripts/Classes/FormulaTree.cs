@@ -217,12 +217,12 @@ public class FormulaTree
         }
         divideNode(rootNode);
 
-        // Not nullable as node == null is a stopping condition
+        // Check the tree is valid
         Queue<Node> queue = new Queue<Node>();
         queue.Enqueue(rootNode);
-        while (!queue.TryPeek(out _)) {
+        while (queue.TryPeek(out _)) {
             Node node = queue.Dequeue();
-            bool isLeaf = false;
+            bool isLeaf = true;
             if (node.Left != null) {
                 isLeaf = false;
                 queue.Enqueue(node.Left);
@@ -235,7 +235,9 @@ public class FormulaTree
             // Ensure leaf nodes are operands
             if (isLeaf) {
                 // Return false if it is not a valid operand
-                if (!int.TryParse(node.Data, out _) && !(node.Data == "x" || node.Data == "-x")) {
+                bool isVariable = node.Data == "x" || node.Data == "-x" 
+                    || node.Data == "--x" || node.Data == "+x";
+                if (!float.TryParse(node.Data, out _) && !isVariable) {
                     success = false;
                 }
             } // Ensure parent nodes are operators
@@ -248,14 +250,21 @@ public class FormulaTree
     // Checks whether a part of the string is an operator and returns the function if it is
     public static bool GetOperator(string formula, int position, out Func<float, float, float>? outputFunction)
     {
+        // Assign initial output value
         outputFunction = null;
+
+        // Check that the character exists
+        if (position >= formula.Length) {
+            return false;
+        }
+
         // Check character is in operator list
         string character = formula[position].ToString();
+
         Func<float, float, float>? operatorFunction;
         // Pass operatorFunction by reference to save the result of the reference in operatorFunction
         bool characterIsOperator = operatorFunctions.TryGetValue(character, out operatorFunction);
-        if (!characterIsOperator)
-        {
+        if (!characterIsOperator) {
             return false;
         }
         // Check context to see if symbol should be treated as an operator (signed numbers)
@@ -287,8 +296,7 @@ public class FormulaTree
                     i++;
                 }
                 // If it has reached the end and no operator or bracket has been found, it is a leaf node so is an operand
-                if (!found)
-                {
+                if (!found) {
                     return false;
                 }
             }
@@ -304,12 +312,15 @@ public class FormulaTree
     {
         float calculate(Node node)
         {
-            if (node.Data == null)
+            if (node.Data == null || node.Data == "")
             {
                 return 0;
-            } else if (node.Data == "x")
+            } else if (node.Data == "x" || node.Data == "+x" || node.Data == "--x")
             {
                 return value;
+            } else if (node.Data == "-x")
+            {
+                return -value;
             }
             Func<float, float, float>? operatorFunction;
             bool operatorExists = GetOperator(node.Data, 0, out operatorFunction);
@@ -327,7 +338,12 @@ public class FormulaTree
                 }
             } else
             { // Leaf node (stopping condition), convert to float and return
-                return float.Parse(node.Data);
+                float number;
+                bool success = float.TryParse(node.Data, out number);
+                if (!success) {
+                    number = 0;
+                }
+                return number;
             }
         }
         if (rootNode != null)
