@@ -69,6 +69,7 @@ public class UserLine : MonoBehaviour
     private void onTextUpdate(string newText) {
         // Attempt to set the formula
         bool success = line.SetFormula(newText);
+        
         // Display feedback to user
         Image inputFieldImage = LineUI.transform.Find("InputField").GetComponent<Image>();
         if (success) {
