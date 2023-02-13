@@ -220,7 +220,7 @@ public class FormulaTree
         // Check the tree is valid
         Queue<Node> queue = new Queue<Node>();
         queue.Enqueue(rootNode);
-        while (queue.TryPeek(out _)) {
+        while (queue.TryPeek(out _) && success) {
             Node node = queue.Dequeue();
             bool isLeaf = true;
             if (node.Left != null) {
