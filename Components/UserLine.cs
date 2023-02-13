@@ -67,6 +67,7 @@ public class UserLine : MonoBehaviour
     private void onTextUpdate(string newText) {
         // LineUI.InputFields
         //https://docs.unity3d.com/ScriptReference/Material.SetColor.html
+        bool success = line.SetFormula(newText);
     }
 
     public void SetColour(Color newColour) {
