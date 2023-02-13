@@ -9,6 +9,8 @@ public class UserLine : MonoBehaviour
     const int INITIAL_Y_POS = -45;
     const int INITIAL_BUTTON_Y = -130;
     const int FRAME_HEIGHT = 90;
+    private Color INPUT_FIELD_COLOUR_VALID = new Color(1f, 1f, 1f, 230f/255f); // Colors cannot be constants
+    private Color INPUT_FIELD_COLOUR_INVALID = new Color(1f, 0.36f, 0.26f, 0.95f);
     public GameObject LineUI;
     private Main main;
     private GameObject lineUIParent;
@@ -65,9 +67,15 @@ public class UserLine : MonoBehaviour
     }
 
     private void onTextUpdate(string newText) {
-        // LineUI.InputFields
-        //https://docs.unity3d.com/ScriptReference/Material.SetColor.html
+        // Attempt to set the formula
         bool success = line.SetFormula(newText);
+        // Display feedback to user
+        Image inputFieldImage = LineUI.transform.Find("InputField").GetComponent<Image>();
+        if (success) {
+            inputFieldImage.color = INPUT_FIELD_COLOUR_VALID;
+        } else {
+            inputFieldImage.color = INPUT_FIELD_COLOUR_INVALID;
+        }
     }
 
     public void SetColour(Color newColour) {

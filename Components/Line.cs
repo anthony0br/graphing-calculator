@@ -81,9 +81,9 @@ public class Line : MonoBehaviour
     }
 
     // Overloaded function to allow omission of inverse parameter
-    public void SetFormula(string text)
+    public bool SetFormula(string text)
     {
-        SetFormula(text, false);
+        return SetFormula(text, false);
     }
 
     // Calculates regions to be unloaded and regions to be loaded and unloads/loads as appropriate
