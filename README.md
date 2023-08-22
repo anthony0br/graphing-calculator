@@ -1,4 +1,4 @@
-# nea
+# Graphing Calculator
 My A-Level Computer Science NEA, a graphing calculator in C#/Unity. This repository contains all files in the "Assets/Scripts/" directory of the Unity project. Note that I decided to use git version control late, so many commits are omitted.
 
 Demonstration video: https://www.youtube.com/watch?v=_VJc8ZFs7vQ&t=8s
